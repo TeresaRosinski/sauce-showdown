@@ -2,35 +2,44 @@
 // This matches your exact Firebase schema structure
 
 import { FirebaseMatchup, UserSession, VoteCast } from '@/types'
-
-// Future: Initialize Firebase here
-// import { initializeApp } from 'firebase/app'
-// import { getFirestore } from 'firebase/firestore'
-// const app = initializeApp(firebaseConfig)
-// export const db = getFirestore(app)
+import { db } from '@/lib/firebase'
+import { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  increment, 
+  arrayUnion, 
+  collection, 
+  query, 
+  where, 
+  getDocs,
+  onSnapshot,
+  Unsubscribe
+} from 'firebase/firestore'
 
 // CORE DATABASE OPERATIONS (exactly matching your schema)
 
 // 1. CHECK IF USER ALREADY VOTED
 export async function hasUserVoted(sessionId: string, matchupId: string): Promise<boolean> {
-  // Future Firebase implementation:
-  // const docRef = doc(db, 'user_sessions', sessionId)
-  // const docSnap = await getDoc(docRef)
-  // 
-  // if (!docSnap.exists()) return false
-  // 
-  // const votedMatchups = docSnap.data().voted_matchups || []
-  // return votedMatchups.includes(matchupId)
-  
-  // Mock implementation for now
-  const mockUserSessions: { [key: string]: UserSession } = {
-    // Will be populated with real session data
+  if (!db) {
+    // Fallback to mock implementation when Firebase is not configured
+    console.log('Firebase not configured - using mock data')
+    return false
   }
-  
-  const userSession = mockUserSessions[sessionId]
-  if (!userSession) return false
-  
-  return userSession.voted_matchups.includes(matchupId)
+
+  try {
+    const docRef = doc(db, 'user_sessions', sessionId)
+    const docSnap = await getDoc(docRef)
+    
+    if (!docSnap.exists()) return false
+    
+    const votedMatchups = docSnap.data().voted_matchups || []
+    return votedMatchups.includes(matchupId)
+  } catch (error) {
+    console.error('Error checking vote status:', error)
+    return false
+  }
 }
 
 // 2. CAST A VOTE
@@ -42,58 +51,91 @@ export async function castVote(sessionId: string, matchupId: string, votedFor: "
       return { success: false, error: 'User already voted on this matchup' }
     }
 
-    // Future Firebase implementation:
-    // // Update the matchup vote count
-    // const matchupRef = doc(db, 'matchups', matchupId)
-    // await updateDoc(matchupRef, {
-    //   [`${votedFor}.votes`]: increment(1),
-    //   total_votes: increment(1)
-    // })
-    //
-    // // Record the user's vote
-    // const userSessionRef = doc(db, 'user_sessions', sessionId)
-    // await setDoc(userSessionRef, {
-    //   session_id: sessionId,
-    //   voted_matchups: arrayUnion(matchupId),
-    //   votes_cast: arrayUnion({
-    //     matchup_id: matchupId,
-    //     voted_for: votedFor,
-    //     timestamp: new Date().toISOString()
-    //   }),
-    //   last_activity: new Date().toISOString()
-    // }, { merge: true })
+    if (!db) {
+      // Mock success when Firebase is not configured
+      console.log(`Vote cast: Session ${sessionId} voted ${votedFor} for ${matchupId}`)
+      return { success: true }
+    }
 
-    // Mock success for now
-    console.log(`Vote cast: Session ${sessionId} voted ${votedFor} for ${matchupId}`)
+    // Update the matchup vote count
+    const matchupRef = doc(db, 'matchups', matchupId)
+    await updateDoc(matchupRef, {
+      [`${votedFor}.votes`]: increment(1),
+      total_votes: increment(1)
+    })
+
+    // Record the user's vote
+    const userSessionRef = doc(db, 'user_sessions', sessionId)
+    await setDoc(userSessionRef, {
+      session_id: sessionId,
+      voted_matchups: arrayUnion(matchupId),
+      votes_cast: arrayUnion({
+        matchup_id: matchupId,
+        voted_for: votedFor,
+        timestamp: new Date().toISOString()
+      }),
+      last_activity: new Date().toISOString()
+    }, { merge: true })
+
+    console.log(`Vote successfully cast: Session ${sessionId} voted ${votedFor} for ${matchupId}`)
     return { success: true }
     
   } catch (error) {
+    console.error('Error casting vote:', error)
     return { success: false, error: 'Failed to cast vote' }
+  }
+}
+
+// 2.5. GET USER SESSION DATA
+export async function getUserSession(sessionId: string): Promise<UserSession | null> {
+  if (!db) {
+    console.log('Firebase not configured - cannot fetch user session')
+    return null
+  }
+
+  try {
+    const docRef = doc(db, 'user_sessions', sessionId)
+    const docSnap = await getDoc(docRef)
+    
+    if (!docSnap.exists()) {
+      return null
+    }
+
+    return docSnap.data() as UserSession
+  } catch (error) {
+    console.error('Error fetching user session:', error)
+    return null
   }
 }
 
 // 3. GET LIVE MATCHUP DATA
 export async function getMatchupData(matchupId: string): Promise<FirebaseMatchup> {
-  // Future Firebase implementation:
-  // const docRef = doc(db, 'matchups', matchupId)
-  // const docSnap = await getDoc(docRef)
-  // 
-  // if (!docSnap.exists()) {
-  //   throw new Error('Matchup not found')
-  // }
-  //
-  // const data = docSnap.data() as FirebaseMatchup
-  // 
-  // // Calculate percentages
-  // const totalVotes = data.total_votes
-  // const optionAPercent = totalVotes > 0 ? Math.round((data.option_a.votes / totalVotes) * 100) : 50
-  // const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
-  //
-  // return {
-  //   ...data,
-  //   option_a: { ...data.option_a, percentage: optionAPercent },
-  //   option_b: { ...data.option_b, percentage: optionBPercent }
-  // }
+  if (db) {
+    try {
+      const docRef = doc(db, 'matchups', matchupId)
+      const docSnap = await getDoc(docRef)
+      
+      if (!docSnap.exists()) {
+        throw new Error('Matchup not found')
+      }
+
+      const data = docSnap.data() as FirebaseMatchup
+      
+      // Calculate percentages
+      const totalVotes = data.total_votes
+      const optionAPercent = totalVotes > 0 ? Math.round((data.option_a.votes / totalVotes) * 100) : 50
+      const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
+
+      return {
+        ...data,
+        option_a: { ...data.option_a, percentage: optionAPercent },
+        option_b: { ...data.option_b, percentage: optionBPercent }
+      }
+    } catch (error) {
+      console.error('Error fetching matchup data:', error)
+      // Fall through to mock data
+    }
+  }
 
   // Mock data matching your schema
   const mockMatchups: { [key: string]: FirebaseMatchup } = {
@@ -190,34 +232,105 @@ export async function getMatchupData(matchupId: string): Promise<FirebaseMatchup
 
 // 4. GET ALL MATCHUPS FOR DISPLAY
 export async function getAllMatchups(): Promise<FirebaseMatchup[]> {
-  // Future Firebase implementation:
-  // const q = query(collection(db, 'matchups'), where('is_active', '==', true))
-  // const querySnapshot = await getDocs(q)
-  // const matchups: FirebaseMatchup[] = []
-  // 
-  // querySnapshot.forEach((doc) => {
-  //   const data = doc.data() as FirebaseMatchup
-  //   const totalVotes = data.total_votes
-  //   const optionAPercent = totalVotes > 0 ? Math.round((data.option_a.votes / totalVotes) * 100) : 50
-  //   const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
-  //   
-  //   matchups.push({
-  //     id: doc.id,
-  //     ...data,
-  //     option_a: { ...data.option_a, percentage: optionAPercent },
-  //     option_b: { ...data.option_b, percentage: optionBPercent }
-  //   })
-  // })
-  // 
-  // return matchups.sort((a, b) => a.id.localeCompare(b.id))
+  if (!db) {
+    // Fallback to mock implementation when Firebase is not configured
+    console.log('🔥 Firebase not configured - using mock matchups')
+    const allMatchups = await Promise.all([
+      getMatchupData('matchup_1'),
+      getMatchupData('matchup_2'), 
+      getMatchupData('matchup_3'),
+      getMatchupData('matchup_4')
+    ])
+    return allMatchups
+  }
 
-  // Mock implementation - get all 4 matchups
-  const allMatchups = await Promise.all([
-    getMatchupData('matchup_1'),
-    getMatchupData('matchup_2'), 
-    getMatchupData('matchup_3'),
-    getMatchupData('matchup_4')
-  ])
+  try {
+    console.log('🔥 Fetching matchups from Firebase...')
+    const q = query(collection(db, 'matchups'), where('is_active', '==', true))
+    const querySnapshot = await getDocs(q)
+    const matchups: FirebaseMatchup[] = []
+    
+    querySnapshot.forEach((doc) => {
+      const data = doc.data() as FirebaseMatchup
+      const totalVotes = data.total_votes
+      const optionAPercent = totalVotes > 0 ? Math.round((data.option_a.votes / totalVotes) * 100) : 50
+      const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
+      
+      console.log(`🔥 Loaded ${doc.id}:`, {
+        option_a: data.option_a.display_name,
+        option_b: data.option_b.display_name,
+        option_a_image: data.option_a.sauce_image,
+        option_b_image: data.option_b.sauce_image
+      })
+      
+      matchups.push({
+        id: doc.id,
+        ...data,
+        option_a: { ...data.option_a, percentage: optionAPercent },
+        option_b: { ...data.option_b, percentage: optionBPercent }
+      })
+    })
+    
+    console.log(`🔥 Successfully loaded ${matchups.length} matchups from Firebase`)
+    return matchups.sort((a, b) => a.id.localeCompare(b.id))
+  } catch (error) {
+    console.error('Error fetching matchups from Firebase:', error)
+    // Fallback to mock data if Firebase fails
+    const allMatchups = await Promise.all([
+      getMatchupData('matchup_1'),
+      getMatchupData('matchup_2'), 
+      getMatchupData('matchup_3'),
+      getMatchupData('matchup_4')
+    ])
+    return allMatchups
+  }
+}
 
-  return allMatchups.filter(matchup => matchup.is_active)
+// 4.5. GET ALL MATCHUPS WITH REAL-TIME UPDATES
+export function subscribeToMatchups(
+  onMatchupsUpdate: (matchups: FirebaseMatchup[]) => void,
+  onError?: (error: Error) => void
+): Unsubscribe | null {
+  if (!db) {
+    console.log('🔥 Firebase not configured - cannot set up real-time listeners')
+    // Fallback to static data
+    getAllMatchups().then(onMatchupsUpdate).catch(onError || console.error)
+    return null
+  }
+
+  try {
+    console.log('🔥 Setting up real-time matchup listeners...')
+    const q = query(collection(db, 'matchups'), where('is_active', '==', true))
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const matchups: FirebaseMatchup[] = []
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data() as FirebaseMatchup
+        const totalVotes = data.total_votes
+        const optionAPercent = totalVotes > 0 ? Math.round((data.option_a.votes / totalVotes) * 100) : 50
+        const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
+        
+        matchups.push({
+          id: doc.id,
+          ...data,
+          option_a: { ...data.option_a, percentage: optionAPercent },
+          option_b: { ...data.option_b, percentage: optionBPercent }
+        })
+      })
+      
+      const sortedMatchups = matchups.sort((a, b) => a.id.localeCompare(b.id))
+      console.log(`🔥 Real-time update: ${sortedMatchups.length} matchups`)
+      onMatchupsUpdate(sortedMatchups)
+    }, (error) => {
+      console.error('Error in real-time listener:', error)
+      if (onError) onError(error)
+    })
+
+    return unsubscribe
+  } catch (error) {
+    console.error('Error setting up real-time listener:', error)
+    if (onError) onError(error as Error)
+    return null
+  }
 }
