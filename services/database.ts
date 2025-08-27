@@ -264,7 +264,7 @@ export async function getAllMatchups(): Promise<FirebaseMatchup[]> {
       })
       
       matchups.push({
-        id: doc.id,
+        //id: doc.id,
         ...data,
         option_a: { ...data.option_a, percentage: optionAPercent },
         option_b: { ...data.option_b, percentage: optionBPercent }
@@ -312,7 +312,7 @@ export function subscribeToMatchups(
         const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
         
         matchups.push({
-          id: doc.id,
+          //id: doc.id,
           ...data,
           option_a: { ...data.option_a, percentage: optionAPercent },
           option_b: { ...data.option_b, percentage: optionBPercent }
