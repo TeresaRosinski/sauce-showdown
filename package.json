@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
+    "build": "next build",
+    "start": "next start", 
     "lint": "next lint",
-    "start": "next start",
-     "populate-db": "node scripts/populateDatabase.js"
+    "export": "next build",
+    "deploy": "npm run export && firebase deploy --only hosting",
+    "populate-db": "node scripts/populateDatabase.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
