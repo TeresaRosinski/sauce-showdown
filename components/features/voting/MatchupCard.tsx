@@ -18,7 +18,6 @@ export function MatchupCard({
   return (
     <div 
       style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
         borderRadius: '16px',
         display: 'flex',
         flexDirection: 'column',
@@ -31,21 +30,17 @@ export function MatchupCard({
     >
 
       <div>
-        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#DA020E', textShadow: '0 2px 4px rgba(0,0,0,0.2)', margin: '5px 0px 5px 0px'}}>
+        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#000000', textShadow: '0 2px 4px rgba(0,0,0,0.2)', margin: '5px 0px 5px 0px'}}>
           VOTE NOW!
         </p>
       </div>
 
 
- 
-
-  
-
-      
-
       {/* Contestants + VS/Progress Bar */}
-      <div style={{ position: "relative", width: "100%" }}>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', margin: '10px 0px 10px 0px' }}>
+
         {/* Top Contestant */}
+        <div>
         <SauceDisplay
           sauce={matchup.leftSauce}
           side="left"
@@ -54,38 +49,24 @@ export function MatchupCard({
           hasVoted={hasVoted}
           //style={{ marginBottom: "40px" }} // spacing for VS overlap
         />
+        </div>
 
-        {/* VS Badge or Progress Bar */}
-        {hasVoted ? (
-          <ProgressBar
-            leftPercentage={currentPercentages.left}
-            rightPercentage={currentPercentages.right}
-            leftColor="#DA020E"
-            rightColor="#FFC72C"
-          />
-        ) : (
-          <div 
-            style={{
-              position: "absolute",   // float in the middle
-              top: "50%",
-              left: "50%",
-              //rotate: "-33deg",
-              transform: "translate(-50%, -50%)",
-              //background: 'linear-gradient(45deg, #FFC72C, #FFD700)',
-              color: '#000000',
-              fontSize: '24px',
-              fontWeight: 900,
-              padding: '8px 8px',
-              borderRadius: '25px',
-              //border: '2px solid white',
-              //boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              //animation: 'pulse 3s infinite',
-              zIndex: 2,
-            }}
-          >
-            VS
-          </div>
-        )}
+
+        {/* VS  */}
+        <div 
+          style={{
+            color: '#ffffff',
+            fontSize: '18px',
+            fontWeight: 600,
+            padding: '4px 4px',
+            borderRadius: '25px',
+            zIndex: 2,
+          }}
+        >
+          VS
+        </div>
+      
+
 
         {/* Bottom Contestant */}
         <SauceDisplay
@@ -98,37 +79,37 @@ export function MatchupCard({
         />
       </div>
 
-    {/* Navigation - only show if props are provided */}
-    {currentStep !== undefined && totalSteps !== undefined && onPrevious && onNext && (
-        <Navigation
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-          onPrevious={onPrevious}
-          onNext={onNext}
-        />
-      )}
+      {hasVoted ? (
+          <ProgressBar
+            leftPercentage={currentPercentages.left}
+            rightPercentage={currentPercentages.right}
+            leftColor="#DA020E"
+            rightColor="#FFC72C"
+          />
+        ) : null}
 
-<div className="text-center" style={{ margin: '5px 0px 5px 0px' }}>
-        <div 
-          className="font-black leading-none mb-1"
-          style={{ 
-            fontSize: '24px',
-            color: '#DA020E',
-            textShadow: '0 2px 4px rgba(0,0,0,0.2)'
-          }}
-        >
-          {totalVotes.toLocaleString()}
-        </div>
-        <div 
-          className="text-xs font-semibold uppercase tracking-wide"
-          style={{ 
-            color: '#666',
-            fontSize: '10px',
-            letterSpacing: '0.5px'
-          }}
-        >
-          Votes Cast
-        </div>
+
+      <div className="text-center" style={{ margin: '5px 0px 5px 0px' }}>
+              <div 
+                className="font-black leading-none mb-1"
+                style={{ 
+                  fontSize: '24px',
+                  color: '#ffffff',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                }}
+              >
+                {totalVotes.toLocaleString()}
+              </div>
+              <div 
+                className="text-xs font-semibold uppercase tracking-wide"
+                style={{ 
+                  color: '#666',
+                  fontSize: '10px',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                Votes Cast
+              </div>
       </div>
 
 
