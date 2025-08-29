@@ -2,6 +2,8 @@ import { MatchupCardProps } from '@/types'
 import { SauceDisplay } from './SauceDisplay'
 import { ProgressBar } from '@/components/common/ProgressBar'
 import { Navigation } from '@/components/common/Navigation'
+import Image from 'next/image'
+import React from 'react'
 
 export function MatchupCard({ 
   matchup, 
@@ -15,29 +17,33 @@ export function MatchupCard({
   onNext,
   totalVotes = 0
 }: MatchupCardProps) {
+
+
+
+
+  const handleNavigation = (direction: 'next' | 'previous', originalHandler: () => void) => {
+    originalHandler()
+  }
+
   return (
     <div 
+      className="matchup-card"
       style={{
-        borderRadius: '16px',
+        //borderRadius: '16px',
         display: 'flex',
         flexDirection: 'column',
-        //justifyContent: 'flex-start',
+        opacity: 1,
+        transform: 'scale(1)',
+        transition: 'all 0.4s ease',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        marginLeft: "10px",
-        marginTop: "10px",
-        width: '280px',
+
+        width: '300px',
       }}
     >
 
-      <div>
-        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#000000', textShadow: '0 2px 4px rgba(0,0,0,0.2)', margin: '5px 0px 5px 0px'}}>
-          VOTE NOW!
-        </p>
-      </div>
-
-
       {/* Contestants + VS/Progress Bar */}
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', margin: '10px 0px 10px 0px' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-start', width: '100%', margin: '20px 10px 10px 10px' }}>
 
         {/* Top Contestant */}
         <div>
@@ -53,21 +59,35 @@ export function MatchupCard({
 
 
         {/* VS  */}
+
+
         <div 
-          style={{
-            color: '#ffffff',
-            fontSize: '18px',
-            fontWeight: 600,
-            padding: '4px 4px',
-            borderRadius: '25px',
-            zIndex: 2,
-          }}
+        style={{
+          position: 'absolute',
+          backgroundImage: 'url("/Street-Fighter-Character-Battle-PNG.png")',
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          //background: 'linear-gradient(45deg, #FFC72C, #FFFFFF)',
+          //WebkitBackgroundClip: 'text',
+          //  WebkitTextFillColor: 'transparent',
+          //backgroundClip: 'text',
+          padding: '0px 3px 0px 3px',
+          margin: '100px 0px 0px 0px',
+          fontWeight: 800,
+          height: '50px',
+          width: '50px',
+          zIndex: 20,
+          fontSize: 'auto',
+          textAlign: 'center',
+          rotate: '-45deg',
+          animation: 'pulse 2s infinite',
+          //transform: 'translateX(-10px)',
+        }}
         >
-          VS
+          
         </div>
       
-
-
         {/* Bottom Contestant */}
         <SauceDisplay
           sauce={matchup.rightSauce}
@@ -75,21 +95,37 @@ export function MatchupCard({
           isSelected={selectedSide === "right"}
           onVote={onVote}
           hasVoted={hasVoted}
-          //style={{ marginTop: "40px" }} // spacing for VS overlap
         />
       </div>
 
+            {/* Navigation - only show if props are provided */}
+      {currentStep !== undefined && totalSteps !== undefined && onPrevious && onNext && (
+        <div>
+          <Navigation
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            onPrevious={() => handleNavigation('previous', onPrevious || (() => {}))}
+            onNext={() => handleNavigation('next', onNext || (() => {}))}
+          />
+        </div>
+      )}
+
+      {/* Progress Bar with conditional rendering */}
       {hasVoted ? (
           <ProgressBar
             leftPercentage={currentPercentages.left}
             rightPercentage={currentPercentages.right}
-            leftColor="#DA020E"
+            leftColor="#000000"
             rightColor="#FFC72C"
           />
-        ) : null}
+        ) : (
+          <div style={{ height: '22px' }} /> // Spacer to maintain consistent layout
+        )}
 
 
-      <div className="text-center" style={{ margin: '5px 0px 5px 0px' }}>
+
+
+      {/* <div className="text-center" style={{ margin: '5px 0px 5px 0px' }}>
               <div 
                 className="font-black leading-none mb-1"
                 style={{ 
@@ -110,7 +146,7 @@ export function MatchupCard({
               >
                 Votes Cast
               </div>
-      </div>
+      </div> */}
 
 
     </div>

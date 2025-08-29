@@ -175,36 +175,11 @@ export default function Home() {
     )
   }
 
-  if (showResults) {
-    return ( 
-      <AppContainer>
-        <div
-          style={{
-            padding: "0",  // Remove padding for banner ads
-            display: "flex",
-            flexDirection: "column", 
-            gap: "0",  // Remove gaps for precise control
-            height: "600px",  // Fixed height for banner
-            width: "300px",   // Fixed width for banner
-          }}
-        >
-          <ResultsView
-            matchups={matchups}
-            results={results}
-            onBackToVoting={handleBackClick}
-          />
-        </div>
-      </AppContainer>
-    )
-  }
 
   return (
     <AppContainer>
       <Header />
- 
-
   
-        <div className="flex-1 flex flex-col justify-center">
           <MatchupCard
             matchup={currentMatchup}
             selectedSide={selectedSide}
@@ -218,23 +193,13 @@ export default function Home() {
             totalVotes={currentTotalVotes}
           />
 
-  
-        </div>
-
-        <div className="text-center">
-
-
           <button
-            //onClick={handleSubmitVote}
-          className="text-gray-800 border-none rounded font-bold cursor-pointer hover:opacity-90 transition-opacity"
-          style={{ backgroundColor: "#F4B52A",  height: "40px", margin: '10px' , width:'280px', fontSize: '20px' }}
+            className="text-gray-800 border-none rounded font-bold cursor-pointer hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: "#F4B52A",  height: "60px" , width:'280px', fontSize: '20px', marginTop: '20px', marginLeft: '10px' }}
           >
-           CTA
+           DOWNLOAD APP
           </button>
-        </div>
         
-        {/* Completion Animation Overlay */}
-        <CompletionAnimation show={showCompletionAnimation} />
     </AppContainer>
   )
 }
