@@ -36,7 +36,7 @@ export function SauceDisplay({ sauce, side, isSelected, onVote, hasVoted = false
     justifyContent: 'center',
     opacity: hasVoted && !isSelected ? 0.3 : 1,
     transform: isSelected ? 'scale(1.02)' : 'scale(1)',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.15s ease',
     cursor: hasVoted ? 'not-allowed' : 'pointer'
   }
 

@@ -244,7 +244,15 @@
 /* Add hover effects for sauce cards */
 .sauce-card:hover {
   animation: wiggle 0.3s ease-in-out;
+  transform: scale(1.05);
   cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Ensure hover effect works even when disabled */
+.sauce-card.cursor-not-allowed:hover {
+  cursor: not-allowed;
+  transform: scale(1);
 }
 
 /* McDonald's-style navigation button animations */
