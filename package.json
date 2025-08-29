@@ -5,10 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start", 
+    "start": "npx serve@latest out",
+    "preview": "npx serve@latest out",
     "lint": "next lint",
-    "export": "next build",
-    "deploy": "npm run export && firebase deploy --only hosting",
+    "deploy": "npm run build && firebase deploy --only hosting",
+    "deploy:preview": "npm run build && firebase hosting:channel:deploy preview",
+    "deploy:quick": "npm run build && firebase deploy --only hosting --force",
+    "firebase:serve": "npm run build && firebase serve --only hosting",
+    "firebase:emulators": "firebase emulators:start",
     "populate-db": "node scripts/populateDatabase.js"
   },
   "dependencies": {

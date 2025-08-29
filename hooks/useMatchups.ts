@@ -19,15 +19,15 @@ export function useMatchups() {
         id: index,
         leftSauce: {
           id: `${fbMatchup.id}_option_a`,
-          name: fbMatchup.option_a.display_name,
-          description: fbMatchup.option_a.display_name,
+          influencer_name: fbMatchup.option_a.influencer_name || '',
+          sauce_name: fbMatchup.option_a.sauce_name || '',
           imageUrl: fbMatchup.option_a.sauce_image,
           personImageUrl: fbMatchup.option_a.influencer_image
         },
         rightSauce: {
           id: `${fbMatchup.id}_option_b`,
-          name: fbMatchup.option_b.display_name,
-          description: fbMatchup.option_b.display_name,
+          influencer_name: fbMatchup.option_b.influencer_name || '',
+          sauce_name: fbMatchup.option_b.sauce_name || '',
           imageUrl: fbMatchup.option_b.sauce_image,
           personImageUrl: fbMatchup.option_b.influencer_image
         }
@@ -69,18 +69,25 @@ export function useMatchups() {
   }, [])
 
   const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1)
-    }
+    // Safety check: prevent navigation when no matchups are loaded
+    if (totalSteps === 0) return
+    
+    // Circular navigation: go from last to first
+    setCurrentStep((currentStep + 1) % totalSteps)
   }
 
   const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
-    }
+    // Safety check: prevent navigation when no matchups are loaded
+    if (totalSteps === 0) return
+    
+    // Circular navigation: go from first to last
+    setCurrentStep((currentStep - 1 + totalSteps) % totalSteps)
   }
 
-  const getCurrentMatchup = (): Matchup => {
+  const getCurrentMatchup = (): Matchup | undefined => {
+    if (matchups.length === 0 || currentStep >= matchups.length) {
+      return undefined
+    }
     return matchups[currentStep]
   }
 

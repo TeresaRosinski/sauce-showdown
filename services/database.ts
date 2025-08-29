@@ -143,12 +143,16 @@ export async function getMatchupData(matchupId: string): Promise<FirebaseMatchup
       id: 'matchup_1',
       option_a: {
         display_name: "MrBeast's Beast Mode BBQ",
+        influencer_name: "MrBeast",
+        sauce_name: "Beast Mode BBQ",
         votes: 127,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
       },
       option_b: {
         display_name: "Charli's Dance Floor Hot Sauce",
+        influencer_name: "Charli D'Amelio",
+        sauce_name: "Dance Floor Hot Sauce",
         votes: 98,
         influencer_image: "/placeholder-user.jpg", 
         sauce_image: "/placeholder.svg"
@@ -161,12 +165,16 @@ export async function getMatchupData(matchupId: string): Promise<FirebaseMatchup
       id: 'matchup_2',
       option_a: {
         display_name: "Dude Perfect's Trick Shot Teriyaki",
+        influencer_name: "Dude Perfect",
+        sauce_name: "Trick Shot Teriyaki",
         votes: 156,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
       },
       option_b: {
         display_name: "Emma's Coffee Shop Chipotle",
+        influencer_name: "Emma Chamberlain",
+        sauce_name: "Coffee Shop Chipotle",
         votes: 134,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
@@ -179,12 +187,16 @@ export async function getMatchupData(matchupId: string): Promise<FirebaseMatchup
       id: 'matchup_3',
       option_a: {
         display_name: "Gordon's Hell's Kitchen Heat",
+        influencer_name: "Gordon Ramsay",
+        sauce_name: "Hell's Kitchen Heat",
         votes: 203,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
       },
       option_b: {
         display_name: "Addison's Sweet & Sassy",
+        influencer_name: "Addison Rae",
+        sauce_name: "Sweet & Sassy",
         votes: 167,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
@@ -197,12 +209,16 @@ export async function getMatchupData(matchupId: string): Promise<FirebaseMatchup
       id: 'matchup_4',
       option_a: {
         display_name: "Ryan's Deadpool Revenge",
+        influencer_name: "Ryan Reynolds",
+        sauce_name: "Deadpool Revenge",
         votes: 189,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
       },
       option_b: {
         display_name: "Zendaya's Spider-Verse Spice",
+        influencer_name: "Zendaya",
+        sauce_name: "Spider-Verse Spice",
         votes: 201,
         influencer_image: "/placeholder-user.jpg",
         sauce_image: "/placeholder.svg"
@@ -256,12 +272,7 @@ export async function getAllMatchups(): Promise<FirebaseMatchup[]> {
       const optionAPercent = totalVotes > 0 ? Math.round((data.option_a.votes / totalVotes) * 100) : 50
       const optionBPercent = totalVotes > 0 ? Math.round((data.option_b.votes / totalVotes) * 100) : 50
       
-      console.log(`🔥 Loaded ${doc.id}:`, {
-        option_a: data.option_a.display_name,
-        option_b: data.option_b.display_name,
-        option_a_image: data.option_a.sauce_image,
-        option_b_image: data.option_b.sauce_image
-      })
+      // Reduced logging to minimize console noise
       
       matchups.push({
         //id: doc.id,
@@ -292,9 +303,15 @@ export function subscribeToMatchups(
   onError?: (error: Error) => void
 ): Unsubscribe | null {
   if (!db) {
-    console.log('🔥 Firebase not configured - cannot set up real-time listeners')
-    // Fallback to static data
-    getAllMatchups().then(onMatchupsUpdate).catch(onError || console.error)
+    console.log('🔥 Firebase not configured - using mock data fallback')
+    // Use mock data directly instead of getAllMatchups which also tries Firebase
+    const mockMatchups = [
+      getMatchupData('matchup_1'),
+      getMatchupData('matchup_2'), 
+      getMatchupData('matchup_3'),
+      getMatchupData('matchup_4')
+    ]
+    Promise.all(mockMatchups).then(onMatchupsUpdate).catch(onError || console.error)
     return null
   }
 

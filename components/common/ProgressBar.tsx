@@ -7,7 +7,8 @@ export function ProgressBar({
   rightColor = "#F4B52A" 
 }: ProgressBarProps) {
   return (
-    <div className="h-4 flex rounded-md overflow-hidden my-2 w-full">
+
+    <div className="h-4 flex rounded-md overflow-hidden w-full" style={{width: '260px', margin: '8px 0', marginLeft: '10px'}}>
       <div
         className="flex items-center justify-center text-white text-xs font-semibold"
         style={{

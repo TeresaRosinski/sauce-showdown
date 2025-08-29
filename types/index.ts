@@ -1,6 +1,8 @@
 // Firebase Schema Types
 export interface MatchupOption {
   display_name: string
+  influencer_name: string
+  sauce_name: string
   votes: number
   percentage?: number
   influencer_image: string
@@ -33,8 +35,8 @@ export interface UserSession {
 // Legacy types for current components (we'll migrate these gradually)
 export interface Sauce {
   id: string
-  name: string
-  description: string
+  influencer_name: string
+  sauce_name: string
   imageUrl: string
   personImageUrl: string
 }
@@ -76,12 +78,24 @@ export interface MatchupCardProps {
     right: number
   }
   hasVoted?: boolean
+  // Navigation props
+  currentStep?: number
+  totalSteps?: number
+  onPrevious?: () => void
+  onNext?: () => void
+  // Vote count prop
+  totalVotes?: number
 }
 
 export interface ResultsViewProps {
   matchups: Matchup[]
   results: { [key: number]: { left: number; right: number } }
   onBackToVoting: () => void
+  // Navigation props (optional for backwards compatibility)
+  currentStep?: number
+  totalSteps?: number
+  onPrevious?: () => void
+  onNext?: () => void
 }
 
 export interface VoteButtonProps {

@@ -18,13 +18,13 @@ export function ResultsView({ matchups, results, onBackToVoting }: ResultsViewPr
             {/* Sauce Names */}
             <div className="grid grid-cols-3 gap-2 items-center">
               <div className="bg-white h-15 flex items-center justify-center text-xs font-bold rounded">
-                {matchup.leftSauce.name}
+                {matchup.leftSauce.sauce_name}
               </div>
               <div className="text-white font-bold text-sm text-center px-2">
                 VS
               </div>
               <div className="bg-white h-15 flex items-center justify-center text-xs font-bold rounded">
-                {matchup.rightSauce.name}
+                {matchup.rightSauce.sauce_name}
               </div>
             </div>
 

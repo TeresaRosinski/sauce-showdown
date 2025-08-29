@@ -4,59 +4,59 @@ import { Sauce, Matchup } from '@/types'
 export const mockSauces: Sauce[] = [
   {
     id: 'sauce-a',
-    name: 'Sauce A',
-    description: 'Sarah loves Spicy BBQ',
-    imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png', // We'll replace external URLs with local assets
-    personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/person.png'
+    influencer_name: 'Sarah',
+    sauce_name: 'Spicy BBQ',
+    imageUrl: '/placeholder.svg',
+    personImageUrl: '/placeholder-user.jpg'
   },
   {
     id: 'sauce-b', 
-    name: 'Sauce B',
-    description: 'Mike prefers Sweet & Sour',
-    imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png',
-    personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/mythic.png'
+    influencer_name: 'Mike',
+    sauce_name: 'Sweet & Sour',
+    imageUrl: '/placeholder.svg',
+    personImageUrl: '/placeholder-user.jpg'
   },
   {
     id: 'sauce-c',
-    name: 'Sauce C', 
-    description: 'Emma enjoys Honey Mustard',
+    influencer_name: 'Emma',
+    sauce_name: 'Honey Mustard',
     imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png',
     personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/person.png'
   },
   {
     id: 'sauce-d',
-    name: 'Sauce D',
-    description: 'Jake favors Buffalo Ranch', 
-    imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png',
-    personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/mythic.png'
+    influencer_name: 'Jake',
+    sauce_name: 'Buffalo Ranch', 
+    imageUrl: '/placeholder.svg',
+    personImageUrl: '/placeholder-user.jpg'
   },
   {
     id: 'sauce-e',
-    name: 'Sauce E',
-    description: 'Alex likes Garlic Aioli',
+    influencer_name: 'Alex',
+    sauce_name: 'Garlic Aioli',
     imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png',
     personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/person.png'
   },
   {
     id: 'sauce-f',
-    name: 'Sauce F',
-    description: 'Maya chooses Chipotle Mayo',
+    influencer_name: 'Maya',
+    sauce_name: 'Chipotle Mayo',
     imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png', 
     personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/mythic.png'
   },
   {
     id: 'sauce-g',
-    name: 'Sauce G',
-    description: 'Ryan picks Sriracha Lime',
+    influencer_name: 'Ryan',
+    sauce_name: 'Sriracha Lime',
     imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png',
     personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/person.png'
   },
   {
     id: 'sauce-h',
-    name: 'Sauce H',
-    description: 'Zoe wants Teriyaki Glaze',
-    imageUrl: 'https://michaelvaughngreen.com/McPollster/sauces/bbq.png',
-    personImageUrl: 'https://michaelvaughngreen.com/McPollster/peeps/mythic.png'
+    influencer_name: 'Zoe',
+    sauce_name: 'Teriyaki Glaze',
+    imageUrl: '/placeholder.svg',
+    personImageUrl: '/placeholder-user.jpg'
   }
 ]
 

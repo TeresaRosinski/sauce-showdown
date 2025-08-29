@@ -2,10 +2,10 @@
 
 import { AppContainer } from '@/components/layout/AppContainer'
 import { Header } from '@/components/layout/Header'
-import { MatchupCard } from '@/components/sauce/MatchupCard'
-import { ResultsView } from '@/components/sauce/ResultsView'
-import { Navigation } from '@/components/ui/Navigation'
-import { CompletionAnimation } from '@/components/ui/CompletionAnimation'
+import { MatchupCard } from '@/components/features/voting/MatchupCard'
+import { ResultsView } from '@/components/features/voting/ResultsView'
+
+import { CompletionAnimation } from '@/components/common/CompletionAnimation'
 import { useMatchups } from '@/hooks/useMatchups'
 import { useVoting } from '@/hooks/useVoting'
 import { useResults } from '@/hooks/useResults'
@@ -13,8 +13,6 @@ import { useSession } from '@/hooks/useSession'
 import { useState, useEffect } from 'react'
 
 export default function Home() {
-    //!testing API key
-    console.log('API Key loaded:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
   // Custom hooks for state management
   const { currentStep, totalSteps, matchups, firebaseMatchups, loading, handleNext, handlePrevious, getCurrentMatchup, resetToFirstMatchup } = useMatchups()
   const { selectedSauces, handleSauceClick, getSelectedSide, resetVotes } = useVoting()
@@ -43,6 +41,12 @@ export default function Home() {
   // Get current matchup data
   const currentMatchup = getCurrentMatchup()
   const currentMatchupId = `matchup_${currentStep + 1}`
+  
+  // Get current Firebase matchup for total votes
+  const currentFirebaseMatchup = firebaseMatchups[currentStep]
+  const currentTotalVotes = currentFirebaseMatchup?.total_votes || 0
+  
+
   
   // Get the selected side - use restored choice if user has already voted, otherwise use current selection
   const userChoice = getUserChoice(currentMatchupId)
@@ -148,17 +152,40 @@ export default function Home() {
       </AppContainer>
     )
   }
+  
+  // Extra safety check for matchups - wait for data to load
+  if (!currentMatchup && !loading) {
+    return (
+      <AppContainer>
+        <div className="flex items-center justify-center h-full">
+          <div className="text-white text-xl">No matchups available...</div>
+        </div>
+      </AppContainer>
+    )
+  }
+
+  // Don't render navigation or content while loading
+  if (loading || !currentMatchup) {
+    return (
+      <AppContainer>
+        <div className="flex items-center justify-center h-full">
+          <div className="text-white text-xl">Loading matchups...</div>
+        </div>
+      </AppContainer>
+    )
+  }
 
   if (showResults) {
     return ( 
       <AppContainer>
         <div
           style={{
-            padding: "8px",
+            padding: "0",  // Remove padding for banner ads
             display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-            height: "100%",
+            flexDirection: "column", 
+            gap: "0",  // Remove gaps for precise control
+            height: "600px",  // Fixed height for banner
+            width: "300px",   // Fixed width for banner
           }}
         >
           <ResultsView
@@ -174,19 +201,9 @@ export default function Home() {
   return (
     <AppContainer>
       <Header />
-      
-      <div
-        style={{
-          backgroundColor: "white",
-          borderRadius: "12px",
-          padding: "12px",
-          height: "380px",
-          display: "flex",
-          flexDirection: "column",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
+ 
+
+  
         <div className="flex-1 flex flex-col justify-center">
           <MatchupCard
             matchup={currentMatchup}
@@ -194,32 +211,25 @@ export default function Home() {
             onVote={handleVote}
             currentPercentages={currentPercentages}
             hasVoted={hasVotedOnCurrent}
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            totalVotes={currentTotalVotes}
           />
-        </div>
 
-        <Navigation
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-          onPrevious={handlePrevious}
-          onNext={handleNext}
-        />
+  
         </div>
 
         <div className="text-center mt-4">
-          <h1 className="text-white text-xl font-bold mb-2">Sauce Showdown!</h1>
-          <p
-            className="text-white mb-4"
-            style={{ fontSize: "12px", lineHeight: "normal", width: "90%", margin: "0 auto 16px auto" }}
-          >
-            Vote for the new sauce you want to try and get more votes in the app to unlock exclusive rewards.
-          </p>
+
 
           <button
-            onClick={handleSubmitVote}
+            //onClick={handleSubmitVote}
           className="text-gray-800 border-none rounded font-bold text-sm cursor-pointer w-full h-9 hover:opacity-90 transition-opacity"
           style={{ backgroundColor: "#F4B52A" }}
           >
-            View Matchup Stats
+           Download App
           </button>
         </div>
         
