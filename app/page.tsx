@@ -221,15 +221,15 @@ export default function Home() {
   
         </div>
 
-        <div className="text-center mt-4">
+        <div className="text-center">
 
 
           <button
             //onClick={handleSubmitVote}
-          className="text-gray-800 border-none rounded font-bold text-sm cursor-pointer w-full h-9 hover:opacity-90 transition-opacity"
-          style={{ backgroundColor: "#F4B52A" }}
+          className="text-gray-800 border-none rounded font-bold cursor-pointer hover:opacity-90 transition-opacity"
+          style={{ backgroundColor: "#F4B52A",  height: "40px", margin: '10px' , width:'280px', fontSize: '20px' }}
           >
-           Download App
+           CTA
           </button>
         </div>
         

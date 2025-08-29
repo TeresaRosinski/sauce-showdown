@@ -19,7 +19,7 @@ export function Navigation({ currentStep, totalSteps, onPrevious, onNext }: Navi
       border: 'none',
       borderRadius: '12px',
       width: '260px',
-      margin: '8px 0px 5px 0px' ,
+      margin: '5px 0px 5px 0px' ,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',

@@ -3,12 +3,12 @@ import Image from 'next/image'
 export function Header() {
   return (
     <div>
-      <div className="flex justify-center pt-5 drop-shadow-lg mb-2" style={{height: '40%'}}>
+      <div className="flex justify-center drop-shadow-lg" style={{ margin: '10px 0px 10px 0px'}}>
             <Image
               src="https://michaelvaughngreen.com/McPollster/mcArch.svg"
               alt="McDonald's Logo"
-              width={40}
-              height={40}
+              width={35}
+              height={35}
               //className="animate-pulse"
               style={{
                 filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4)) drop-shadow(0 0 20px rgba(255,199,44,0.3))'
@@ -16,28 +16,38 @@ export function Header() {
             />
       </div>
     
-    <div className="text-center mb-2">  {/* Reduced from mb-8 */}
+    <div className="text-center">  
           {/* Main Title - Optimized for banner */}
-          <h1 
-            className="text-white font-black mb-1 leading-none tracking-tight drop-shadow-2xl" 
+          <p 
+            className=" font-black leading-none tracking-tight" 
             style={{ 
-              fontSize: '28px',  // Scaled down from text-4xl for banner proportions
-              textShadow: '0 4px 12px rgba(0,0,0,0.6), 0 0 15px rgba(255, 199, 44, 0.4)' 
+              color: '#FCF0E3',
+              fontSize: '38px',  // Scaled down from text-4xl for banner proportions
+ 
+              marginBottom: '4px'
             }}
           >
-            SAUCE<br/>SHOWDOWN!
-          </h1>
+            SAUCE SHOWDOWN!
+          </p>
         
+     
+
           {/* Subtitle - Tighter spacing */}
           <div 
-            className="text-yellow-100 font-semibold uppercase tracking-widest mb-3"
+
             style={{ 
-              fontSize: '11px',  // Slightly smaller for banner
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+              fontSize: '15px',  // Slightly smaller for banner
+              marginBottom: '0px',
+              color: '#FED22D',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.4px'
             }}
           >
             8 Influencers • 8 Epic Sauces
           </div>
+
+
           
         </div>
     </div>

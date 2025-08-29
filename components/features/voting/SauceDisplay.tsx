@@ -42,7 +42,7 @@ export function SauceDisplay({ sauce, side, isSelected, onVote, hasVoted = false
     transition: 'all 0.3s ease',
     cursor: hasVoted ? 'not-allowed' : 'pointer',
     boxShadow: getShadowColor(),
-    margin: side === "left" ? "0px 10px 20px 10px" : "20px 10px 0px 10px",
+    margin: side === "left" ? "0px 10px 10px 10px" : "10px 10px 0px 10px",
     // Safari-specific properties using string indexing
     ...({
       WebkitTransform: isSelected ? 'scale(1.02)' : 'scale(1)',
@@ -74,9 +74,21 @@ export function SauceDisplay({ sauce, side, isSelected, onVote, hasVoted = false
           width: '180px', height: '100px', display: 'flex', flexDirection: 'column',  alignItems: 'center', textAlign: 'center', justifyContent: 'center'
         }}>
 
-          <div>
+<div className="imageHolder" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+    <div>
           <Image
             src={sauce.personImageUrl}
+            alt="Influencer"
+            width={60}
+            height={60}
+            className={`${  side === "left" ? 'border-red-400' : 'border-yellow-400'}`}
+            style={{ objectFit: 'contain', width: '45px', height: '45px' }}
+          />
+
+        </div>
+        <div>
+          <Image
+            src={sauce.imageUrl}
             alt="Influencer"
             width={60}
             height={60}
@@ -84,7 +96,9 @@ export function SauceDisplay({ sauce, side, isSelected, onVote, hasVoted = false
             style={{ objectFit: 'contain', width: '45px', height: '45px' ,borderRadius: '50%' }}
           />
 
-          </div>
+        </div>
+  </div>
+
     
         <div> 
           <div className="text-gray-600 text-xs font-semibold leading-tight">

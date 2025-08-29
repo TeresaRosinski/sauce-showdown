@@ -25,18 +25,23 @@ export function MatchupCard({
         //justifyContent: 'flex-start',
         alignItems: 'center',
         marginLeft: "10px",
+        marginTop: "10px",
         width: '280px',
       }}
     >
-      {/* Navigation - only show if props are provided */}
-      {currentStep !== undefined && totalSteps !== undefined && onPrevious && onNext && (
-        <Navigation
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-          onPrevious={onPrevious}
-          onNext={onNext}
-        />
-      )}
+
+      <div>
+        <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#DA020E', textShadow: '0 2px 4px rgba(0,0,0,0.2)', margin: '5px 0px 5px 0px'}}>
+          VOTE NOW!
+        </p>
+      </div>
+
+
+ 
+
+  
+
+      
 
       {/* Contestants + VS/Progress Bar */}
       <div style={{ position: "relative", width: "100%" }}>
@@ -93,8 +98,17 @@ export function MatchupCard({
         />
       </div>
 
-      {/* Live Vote Counter */}
-      <div className="text-center" style={{ margin: '10px 0px 10px 0px' }}>
+    {/* Navigation - only show if props are provided */}
+    {currentStep !== undefined && totalSteps !== undefined && onPrevious && onNext && (
+        <Navigation
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          onPrevious={onPrevious}
+          onNext={onNext}
+        />
+      )}
+
+<div className="text-center" style={{ margin: '5px 0px 5px 0px' }}>
         <div 
           className="font-black leading-none mb-1"
           style={{ 
@@ -116,6 +130,8 @@ export function MatchupCard({
           Votes Cast
         </div>
       </div>
+
+
     </div>
   )
 }
